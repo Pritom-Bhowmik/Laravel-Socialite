@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
@@ -46,6 +49,29 @@ class LoginController extends Controller
     // Google Callback 
     public function handleGoogleCallback(){
         $user = Socialite::driver('google')->user();
+        $usercheck = User::where('email', '=', $user->email)->first();
+        if(!$usercheck){
+            $data = User::create([
+                'name' => $user->name,
+                'email' => $user->email,
+                'provider_id' => $user->id,
+                'avatar' => $user->avatar,
+            ]);
+            Auth::login($data);
+            return redirect()->route('home');
+        }else{
+            Auth::login($usercheck);
+            return redirect()->route('home');
+        }
+    }
+
+    // Facebook Login 
+    public function redirectToFacebook(){
+        return Socialite::driver('facebook')->redirect();
+    }
+    // Facebook Callback 
+    public function handleFacebookCallback(){
+        $user = Socialite::driver('facebook')->user();
         dd($user);
     }
 
@@ -57,5 +83,20 @@ class LoginController extends Controller
     // Github Callback 
     public function handleGithubCallback(){
         $user = Socialite::driver('github')->user();
+
+        $usercheck = User::where('email', '=', $user->email)->first();
+        if(!$usercheck){
+            $data = User::create([
+                'name' => $user->name,
+                'email' => $user->email,
+                'provider_id' => $user->id,
+                'avatar' => $user->avatar,
+            ]);
+            Auth::login($data);
+            return redirect()->route('home');
+        }else{
+            Auth::login($usercheck);
+            return redirect()->route('home');
+        }
     }
 }

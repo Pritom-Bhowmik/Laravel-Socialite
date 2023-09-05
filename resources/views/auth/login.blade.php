@@ -14,6 +14,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6 offset-md-3">
                                 <a href="{{ route('login.google') }}" class="btn btn-danger p-2 mt-2 d-block">Login With Google</a>
+                                <a href="{{ route('login.facebook') }}" class="btn btn-info p-2 mt-2 d-block">Login With Facebook</a>
                                 <a href="{{ route('login.github') }}" class="btn btn-dark p-2 mt-2 d-block">Login With Github</a>
                             </div>
                         </div>
